@@ -1,0 +1,81 @@
+class Category:
+    def __init__(self,name):
+        self.name = name
+        self.ledger = []
+
+    def deposit(self,amount,description):
+        if not description:
+            description = ''
+        
+        add = {'amount': amount, 'description': description}
+        self.ledger.append(add)
+
+    def withdraw(self,amount,description):
+        if not self.check_funds(amount):
+            return False
+
+        else:
+            if not description:
+                description = ''
+        
+            remove = {'amount': -amount, 'description': description}
+            self.ledger.append(remove)
+            return True
+
+    def get_balance(self):
+        balance = 0
+        for transaction in self.ledger:
+            balance += transaction['amount']
+        return balance
+
+    def transfer(self, amount, Cat):
+        if not self.check_funds(amount):
+            return False
+        self.withdraw(amount, f'Transfer to {Cat.name}')
+        Cat.deposit(amount, f'Transfer from {self.name}')
+        return True
+    
+    def check_funds(self,amount):
+        balance = self.get_balance()
+        if amount > balance:
+            return False
+        else:
+            return True
+    def __str__(self):
+        balance=self.get_balance()
+        header='*'*((30-len(self.name))//2)
+        message = f'{header}{self.name}{header}\n'
+        for transaction in self.ledger:     
+            cut_description = transaction['description'][:23]
+            part = f"{cut_description:<23}{transaction['amount']:>7.2f}"
+            message += part + '\n'
+        
+        message += f'Total: {balance}'
+        return message
+
+def create_spend_chart(categories):
+    print('Percentage spent by category')
+    total_sum = 0
+    sums = []
+    for category in categories:
+        sum = 0
+        for transaction in category:
+            if transaction['amount'] < 0:
+                sum += (-amount)
+        total_sum += sum
+        sums.append(sum)
+    
+    percentages = []
+    for sum in sums:
+        percentage = round(sum/total_sum)*100
+        percentages.append(percentage)
+    
+    for i in range (100,-1,-10):
+        final = '{i}|'
+        if i in percentages:
+            mult = percentages.count(i)
+            final =+ (' o ')*mult
+            final =+ 
+
+space = (''*len(categories)*3)+''        print('{i}|{space}')
+
