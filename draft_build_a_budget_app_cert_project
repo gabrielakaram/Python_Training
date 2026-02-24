@@ -57,25 +57,48 @@ def create_spend_chart(categories):
     print('Percentage spent by category')
     total_sum = 0
     sums = []
+
     for category in categories:
-        sum = 0
-        for transaction in category:
+        spent = 0
+        for transaction in category.ledger:
             if transaction['amount'] < 0:
-                sum += (-amount)
-        total_sum += sum
-        sums.append(sum)
+                spent += -transaction['amount']  
+        total_sum += spent
+        sums.append(spent)
     
     percentages = []
-    for sum in sums:
-        percentage = round(sum/total_sum)*100
+    for spent in sums:
+        percentage = round((spent / total_sum) * 100)
         percentages.append(percentage)
-    
+        print(percentage)
     for i in range (100,-1,-10):
-        final = '{i}|'
-        if i in percentages:
-            mult = percentages.count(i)
-            final =+ (' o ')*mult
-            final =+ 
+        if i == 100:
+            final = f'{i}|'
+        elif i>0: 
+            final = f' {i}|'
+        else:
+            final = f'  {i}|'
+        
+        for p in percentages:
+            if p >= i:
+                final += " o "
+            else:
+                final += "   "
+            
+            final += ' '
+        print(final)
 
-space = (''*len(categories)*3)+''        print('{i}|{space}')
+    dash = '-'*(len(categories))*3+'-'
+    print('    '+dash)
+
+    max_len = max(len(cat.name) for cat in categories)
+    for i in range(max_len):
+        line = "    "  # 5 spaces before vertical names
+        for cat in categories:
+            if i < len(cat.name):
+                line += " " + cat.name[i] + " "
+            else:
+                line += "   "
+            line +=' '
+        print(line)
 
