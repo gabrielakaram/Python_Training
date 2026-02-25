@@ -3,24 +3,19 @@ class Category:
         self.name = name
         self.ledger = []
 
-    def deposit(self,amount,description):
-        if not description:
-            description = ''
+    def deposit(self,amount,description=''):
         
         add = {'amount': amount, 'description': description}
         self.ledger.append(add)
 
-    def withdraw(self,amount,description):
+    def withdraw(self,amount,description=''):
         if not self.check_funds(amount):
             return False
-
-        else:
-            if not description:
-                description = ''
         
-            remove = {'amount': -amount, 'description': description}
-            self.ledger.append(remove)
-            return True
+
+        remove = {'amount': -amount, 'description': description}
+        self.ledger.append(remove)
+        return True
 
     def get_balance(self):
         balance = 0
@@ -54,7 +49,7 @@ class Category:
         return message
 
 def create_spend_chart(categories):
-    print('Percentage spent by category')
+    output= 'Percentage spent by category\n'
     total_sum = 0
     sums = []
 
@@ -68,37 +63,37 @@ def create_spend_chart(categories):
     
     percentages = []
     for spent in sums:
-        percentage = round((spent / total_sum) * 100)
-        percentages.append(percentage)
-        print(percentage)
+        percent = (spent / total_sum) * 100
+        percent = int(percent // 10) * 10
+        percentages.append(percent)
+
     for i in range (100,-1,-10):
         if i == 100:
-            final = f'{i}|'
+            output += f'{i}|'
         elif i>0: 
-            final = f' {i}|'
+            output += f' {i}|'
         else:
-            final = f'  {i}|'
+            output += f'  {i}|'
         
         for p in percentages:
             if p >= i:
-                final += " o "
+                output += " o "
             else:
-                final += "   "
+                output += "   "
             
-            final += ' '
-        print(final)
+        output += ' \n'
 
-    dash = '-'*(len(categories))*3+'-'
-    print('    '+dash)
+    output += "    " + "-" * (len(categories) * 3 + 1) + "\n"
 
     max_len = max(len(cat.name) for cat in categories)
     for i in range(max_len):
-        line = "    "  # 5 spaces before vertical names
+        output += "    "  # 5 spaces before vertical names
         for cat in categories:
             if i < len(cat.name):
-                line += " " + cat.name[i] + " "
+                output += " " + cat.name[i] + " "
             else:
-                line += "   "
-            line +=' '
-        print(line)
+                output += "   "
+        output +=' \n'
+
+    return output.rstrip("\n")
 
